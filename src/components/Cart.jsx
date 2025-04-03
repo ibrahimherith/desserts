@@ -1,28 +1,40 @@
 import React from "react";
 import { X } from "lucide-react";
 
-const cartItems = [1];
+const Cart = ({ cartItems, setCartItems }) => {
+  const handleDeleteCartItem = (name) => {
+    const newCartItems = cartItems.filter((item) => item.name !== name);
 
-const Cart = () => {
-  const itemsNo = cartItems.length;
+    setCartItems(newCartItems);
+  };
+
   return (
     <div className="">
       <div className="bg-Rose-50 w-full p-4">
-        <h2 className="text-Red font-bold capitalize mb-4">Your cart(0)</h2>
-        {itemsNo > 0 ? (
+        <h2 className="text-Red font-bold capitalize mb-4">
+          Your cart({cartItems.length})
+        </h2>
+        {cartItems.length > 0 ? (
           <div className="space-y-6">
             <ul>
-              <li className="py-4 border-b border-gray-200">
-                <p className="font-bold">Classic tiramisu</p>
-                <div className="flex items-center justify-between">
-                  <div className="space-x-2">
-                    <span className="text-Red font-semibold">1x</span>
-                    <span>@$5.5</span>
-                    <span className="font-semibold">$5.5</span>
+              {cartItems.map((item, index) => (
+                <li key={index} className="py-4 border-b border-gray-200">
+                  <p className="font-bold">{item.name}</p>
+                  <div className="flex items-center justify-between">
+                    <div className="space-x-2">
+                      <span className="text-Red font-semibold">1x</span>
+                      <span>{item.price} =</span>
+                      <span className="font-semibold">{1 * item.price}</span>
+                    </div>
+                    <button
+                      onClick={handleDeleteCartItem(item.name)}
+                      className="cursor-pointer"
+                    >
+                      <X size={20} color="red" />
+                    </button>
                   </div>
-                  <X size={20} />
-                </div>
-              </li>
+                </li>
+              ))}
             </ul>
             <div className="flex items-center justify-between">
               <p>Order Total</p>
