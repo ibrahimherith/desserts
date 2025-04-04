@@ -1,79 +1,41 @@
 import { useState } from "react";
 import Cart from "./components/Cart";
 import Menu from "./components/Menu";
-
-const menuData = [
-  {
-    tag: "Waffle",
-    name: "Waffle with Berries",
-    price: 6.5,
-    image: "../public/assets/images/image-waffle-desktop.jpg",
-  },
-  {
-    tag: "Crème Brûlée",
-    name: "Vanilla Bean Crème Brûlée",
-    price: 7.0,
-    image: "../public/assets/images/image-creme-brulee-desktop.jpg",
-  },
-  {
-    tag: "Macaron",
-    name: " Macaron Mix of Five",
-    price: 8.0,
-    image: "../public/assets/images/image-macaron-desktop.jpg",
-  },
-  {
-    tag: "Tiramisu",
-    name: "Classic Tiramisu",
-    price: 5.5,
-    image: "../public/assets/images/image-tiramisu-desktop.jpg",
-  },
-  {
-    tag: "Baklava",
-    name: "Pistachio Baklava",
-    price: 4.0,
-    image: "../public/assets/images/image-baklava-desktop.jpg",
-  },
-  {
-    tag: "Pie",
-    name: "Lemon Meringue Pie",
-    price: 5.0,
-    image: "../public/assets/images/image-meringue-desktop.jpg",
-  },
-  {
-    tag: "Cake",
-    name: "Red Velvet Cake",
-    price: 4.5,
-    image: "../public/assets/images/image-cake-desktop.jpg",
-  },
-  {
-    tag: "Brownie",
-    name: "Salted Caramel Brownie",
-    price: 5.5,
-    image: "../public/assets/images/image-brownie-desktop.jpg",
-  },
-  {
-    tag: "Panna Cotta",
-    name: "Vanilla Panna Cotta",
-    price: 5.5,
-    image: "../public/assets/images/image-panna-cotta-desktop.jpg",
-  },
-];
+import { menuItems } from "./data";
+import Container from "./components/Container";
+import Main from "./components/Main";
 
 function App() {
-  const [desserts, setDesserts] = useState(menuData);
+  const [desserts, setDesserts] = useState(menuItems);
   const [cartItems, setCartItems] = useState([]);
 
-  const handleAddToCart = (selectedItem) => {
-    setCartItems((items) => [...items, selectedItem]);
+  const handleAddToCart = (item) => {
+    setCartItems((items) => {
+      const exists = items.find((cartItem) => cartItem.id === item.id);
+
+      if (exists) {
+        return items.map((cartItem) =>
+          cartItem.id === item.id
+            ? { ...cartItem, quantity: cartItem.quantity + 1 }
+            : cartItem
+        );
+      } else {
+        return [...items, item];
+      }
+    });
+  };
+
+  const handleDeleteCartItem = (id) => {
+    setCartItems(cartItems.filter((item) => item.id !== id));
   };
 
   return (
-    <div className="bg-Rose-100 min-h-screen py-8">
-      <div className="container mx-auto grid grid-cols-1 gap-6 px-8 py-4 lg:grid-cols-4">
+    <Main>
+      <Container>
         <Menu desserts={desserts} onAddToCart={handleAddToCart} />
-        <Cart cartItems={cartItems} setCartItems={setCartItems} />
-      </div>
-    </div>
+        <Cart cartItems={cartItems} onDeleteCartItem={handleDeleteCartItem} />
+      </Container>
+    </Main>
   );
 }
 

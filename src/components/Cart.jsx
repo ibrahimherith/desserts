@@ -1,12 +1,11 @@
 import React from "react";
 import { X } from "lucide-react";
 
-const Cart = ({ cartItems, setCartItems }) => {
-  const handleDeleteCartItem = (name) => {
-    const newCartItems = cartItems.filter((item) => item.name !== name);
-
-    setCartItems(newCartItems);
-  };
+const Cart = ({ cartItems, onDeleteCartItem }) => {
+  const total = cartItems.reduce(
+    (acc, item) => acc + item.quantity * item.price,
+    0
+  );
 
   return (
     <div className="">
@@ -22,12 +21,16 @@ const Cart = ({ cartItems, setCartItems }) => {
                   <p className="font-bold">{item.name}</p>
                   <div className="flex items-center justify-between">
                     <div className="space-x-2">
-                      <span className="text-Red font-semibold">1x</span>
+                      <span className="text-Red font-semibold">
+                        {item.quantity} x
+                      </span>
                       <span>{item.price} =</span>
-                      <span className="font-semibold">{1 * item.price}</span>
+                      <span className="font-semibold">
+                        {item.quantity * item.price}
+                      </span>
                     </div>
                     <button
-                      onClick={handleDeleteCartItem(item.name)}
+                      onClick={() => onDeleteCartItem(item.id)}
                       className="cursor-pointer"
                     >
                       <X size={20} color="red" />
@@ -38,7 +41,7 @@ const Cart = ({ cartItems, setCartItems }) => {
             </ul>
             <div className="flex items-center justify-between">
               <p>Order Total</p>
-              <h3 className="text-xl font-bold">$5.5</h3>
+              <h3 className="text-xl font-bold">{total} TSH</h3>
             </div>
             <button className="w-full p-2 rounded-full bg-Red text-white font-semibold hover:bg-Rose-500">
               Confirm Order
